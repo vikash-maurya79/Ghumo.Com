@@ -1,0 +1,17 @@
+
+
+<%layout("/layout/boilerplate.ejs")%>
+ <div class="image_div">
+<%for(let data_fetched of data ){%>
+  <a href="/product/<%=data_fetched._id%>/view">
+<div class="card" style="width: 16rem; margin: 2rem;">
+  <img src="<%=data_fetched.url%>" class="card-img-top" alt="Product image">
+  <div class="card-body">
+    <p class="card-text"><%=data_fetched.descreption%> &nbsp; <%=data_fetched.city%>
+    <br>
+    <%=data_fetched.state%>  </p>
+  </div>
+</div>
+  </a>
+<%}%>
+    </div>

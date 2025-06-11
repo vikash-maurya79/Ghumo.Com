@@ -1,0 +1,19 @@
+<%layout("/layout/boilerplate")%>
+<div class="card mb-3 m-5">
+  <img src="<%=data_found_in_db.url%>" class="card-img-top" alt="...">
+  <div class="card-body">
+    <div class="edit_container">
+    <h5 class="card-title"><%=data_found_in_db.city%></h5>
+    <p class="card-text"><%=data_found_in_db.descreption%></p>
+    <a href="/edit/<%=data_found_in_db._id%>/product">Edit</a>
+    </div>
+    <div class="delete_container">
+    <p class="card-text"><%=data_found_in_db.address2%></p>
+    <p class="card-text"><%=data_found_in_db.state%></p>
+    <form action="/product/<%=data_found_in_db._id%>?_method=DELETE" method="POST">
+    <p class="card-text"><button>delete</button></p>
+    </form>
+
+    </div>
+  </div>
+</div>

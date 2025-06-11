@@ -1,0 +1,104 @@
+body {
+    background-color: rgb(254, 253, 253) !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.main_top_container {
+    background-color: white !important;
+    border-bottom: 1px solid rgb(243, 235, 235) !important;
+}
+
+.navbar-brand {
+    margin-left: 2rem !important;
+    color: red !important;
+}
+
+a {
+    text-decoration: none !important; 
+}
+
+a:hover {
+    color: blue !important;
+}
+
+.main_bottom_container {
+    background: black;
+    width: 100%;
+    height: 15rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.terms {
+    padding: 30px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+}
+
+.social {
+    padding-bottom: 30px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+}
+.listing_form{
+    padding: 1rem !important;
+}
+.btn-primary:hover{
+    background-color: white !important;
+    color: black !important;
+    border: 1px solid red !important;
+
+}
+.image_div{
+   height: 100%;
+   width: 100%;
+   display: flex !important;
+   flex-wrap: wrap !important;
+   flex-direction: row!important;
+}
+.product_container{
+    
+    width: 100%;
+    height: 100%;
+    margin: 1rem;
+}
+.info{
+    width: 100%;
+    justify-content: center;
+}
+.info_container{
+    width: 40%;
+    height: 25rem;
+}
+.card-body{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    
+}
+.edit_container .delete_container{
+    width: 50%;
+    height: 100%;
+}
+button{
+    font-size: 20px;
+    width: auto;
+    border-radius: 10px;
+    background-color:  red;
+    color: white;
+    border: none;
+}
+button:hover{
+    border: 1px solid red;
+    background-color: white;
+    color: black;
+    
+}
