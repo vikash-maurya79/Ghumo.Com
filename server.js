@@ -78,7 +78,7 @@ app.post("/new_listings", asyncWrap(async (req, res, next) => {
     })
 
 
-    console.log(data);
+    
 
 }))
 app.get("/product/:id/view", asyncWrap(async (req, res, next) => {
