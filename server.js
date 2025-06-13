@@ -11,7 +11,6 @@ const { listingSchema } = require("./schema_validation.js");
 const { error } = require("console");
 const { validateHeaderValue } = require("http");
 app.use(methodoverride("_method"));
-
 app.use(express.static("public"));
 app.engine("ejs", ejsmate);
 app.set("views", path.join(__dirname, "/views"));
@@ -38,7 +37,6 @@ const validateListing = (req, res, next) => {
         next(err.details).message;
     }
 }
-
 app.get("/", asyncWrap(async (req, res, next) => {
 
     const data = await product_data.find({});
@@ -76,10 +74,6 @@ app.post("/new_listings", asyncWrap(async (req, res, next) => {
         console.log(result);
         res.send("data saved successfully");
     })
-
-
-    
-
 }))
 app.get("/product/:id/view", asyncWrap(async (req, res, next) => {
 
@@ -90,7 +84,7 @@ app.get("/product/:id/view", asyncWrap(async (req, res, next) => {
 
 
 }))
-//...............Edit Route is Here............//
+//...............Edit Route is Here............// 
 app.get("/edit/:id/product", asyncWrap(async (req, res, next) => {
     console.log("edit route hitten");
     let { id } = req.params;
@@ -108,12 +102,10 @@ app.put("/product/:id", validateListing, asyncWrap(async (req, res, next) => {
     let edited_data_found = await product_data.findByIdAndUpdate(id, { ...req.body });
     console.log("edited data is", edited_data_found);
     res.redirect(`/product/${id}/view`);
-
-
 })
 )
 //.................route for deletion of product.........................//
-app.delete("/product/:id", asyncWrap(async (req, res,next) => {
+app.delete("/product/:id", asyncWrap(async (req, res, next) => {
     let { id } = req.params;
 
     let deleted_data = await product_data.findByIdAndDelete(id);
@@ -124,24 +116,21 @@ app.delete("/product/:id", asyncWrap(async (req, res,next) => {
 //................Wrap Error Function.....................//
 function asyncWrap(fn) {
     return function (req, res, next) {
-        fn(req,res,next).catch((err) => {
+        fn(req, res, next).catch((err) => {
             next(err);
         })
     }
 }
 //................Error middleware.................//
 app.use((err, req, res, next) => {
-    let status = err.status ||500;
-    let message = err.message ||"Somthing went wrong" ;
+    let status = err.status || 500;
+    let message = err.message || "Somthing went wrong";
     res.status(status).send(message);
 })
 //................Middleware to handle unknown route access.........//
-app.all("*",(req,res,next)=>{
+app.all("*", (req, res, next) => {
     res.send("This page is lost in space , stop searching and back to earth");
 })
-
-
-
 app.listen("8888", () => {
     console.log("Server is running successfully at port 8888");
 })
