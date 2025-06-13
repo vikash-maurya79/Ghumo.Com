@@ -39,7 +39,6 @@ const validateListing = (req, res, next) => {
 }
 //................Home route is here..................//
 app.get("/", asyncWrap(async (req, res, next) => {
-
     const data = await product_data.find({});
     console.log("it's working");
     res.render("./listings/home.ejs", { data });
