@@ -37,6 +37,7 @@ const validateListing = (req, res, next) => {
         next(err.details).message;
     }
 }
+//................Home route is here..................//
 app.get("/", asyncWrap(async (req, res, next) => {
 
     const data = await product_data.find({});
@@ -51,6 +52,7 @@ app.get("/", asyncWrap(async (req, res, next) => {
 app.get("/partner", (req, res) => {
     res.render("./listings/new_listing_form.ejs");
 })
+//..............New listing route......................//
 app.post("/new_listings", asyncWrap(async (req, res, next) => {
     let url_local = "https://images.pexels.com/photos/271816/pexels-photo-271816.jpeg?auto=compress&cs=tinysrgb&w=600";
     const data = {
@@ -75,6 +77,7 @@ app.post("/new_listings", asyncWrap(async (req, res, next) => {
         res.send("data saved successfully");
     })
 }))
+//..................After click on product view route is here...............//
 app.get("/product/:id/view", asyncWrap(async (req, res, next) => {
 
     let { id } = req.params;
