@@ -131,7 +131,8 @@ app.use((err, req, res, next) => {
 })
 //................Middleware to handle unknown route access.........//
 app.all("*", (req, res, next) => {
-    res.send("This page is lost in space , stop searching and back to earth");
+    let data = "This page is lost in space , stop searching and back to earth !!";
+    res.render("./listings/error.ejs", { data });
 })
 app.listen("8888", () => {
     console.log("Server is running successfully at port 8888");

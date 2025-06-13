@@ -15,7 +15,7 @@ body {
 }
 
 a {
-    text-decoration: none !important; 
+    text-decoration: none !important;
 }
 
 a:hover {
@@ -48,57 +48,77 @@ a:hover {
     gap: 20px;
     justify-content: center;
 }
-.listing_form{
+
+.listing_form {
     padding: 1rem !important;
 }
-.btn-primary:hover{
+
+.btn-primary:hover {
     background-color: white !important;
     color: black !important;
     border: 1px solid red !important;
 
 }
-.image_div{
-   height: 100%;
-   width: 100%;
-   display: flex !important;
-   flex-wrap: wrap !important;
-   flex-direction: row!important;
+
+.image_div {
+    height: 100%;
+    width: 100%;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: row !important;
 }
-.product_container{
-    
+
+.product_container {
+
     width: 100%;
     height: 100%;
     margin: 1rem;
 }
-.info{
+
+.info {
     width: 100%;
     justify-content: center;
 }
-.info_container{
+
+.info_container {
     width: 40%;
     height: 25rem;
 }
-.card-body{
+
+.card-body {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    
+
 }
-.edit_container .delete_container{
+
+.edit_container .delete_container {
     width: 50%;
     height: 100%;
 }
-button{
+
+button {
     font-size: 20px;
     width: auto;
     border-radius: 10px;
-    background-color:  red;
+    background-color: red;
     color: white;
     border: none;
 }
-button:hover{
+
+button:hover {
     border: 1px solid red;
     background-color: white;
     color: black;
-    
+
+}
+
+.error_container {
+    height: 700px;
+    width: 100%;
+    text-align: center;
+}
+
+.error_container h3 {
+    padding: 300px;
 }
