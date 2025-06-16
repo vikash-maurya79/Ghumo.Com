@@ -6,8 +6,9 @@ const { urlencoded } = require("body-parser");
 const mongoose = require("mongoose");
 const { mainModule } = require("process");
 const product_data = require("./Database/product")
+const Review = require("./Database/review.js");
 const methodoverride = require("method-override");
-const { listingSchema } = require("./schema_validation.js");
+const { listingSchema, reviewSchema } = require("./schema_validation.js");
 const { error } = require("console");
 const { validateHeaderValue } = require("http");
 app.use(methodoverride("_method"));
@@ -37,6 +38,19 @@ const validateListing = (req, res, next) => {
         next(err.details).message;
     }
 }
+//...........Review validation...............//
+const validateReview = (req, res, next) => {
+    let { error } = reviewSchema.validate(req.body);
+    if (error) {
+        console.log(error);
+        let msg = error.details.map(el => el.message).join(",");
+        let err = new Error(msg);
+        err.status = 400;
+        return next(err);
+    }
+    next();
+}
+
 //................Home route is here..................//
 app.get("/", asyncWrap(async (req, res, next) => {
     const data = await product_data.find({});
@@ -115,6 +129,27 @@ app.delete("/product/:id", asyncWrap(async (req, res, next) => {
 
 })
 )
+//.............Review Route..............//
+app.post("/listing/:id/review", validateReview, asyncWrap(async (req, res, next) => {
+    const { id } = req.params;
+    const listed_data = await product_data.findById(id);
+
+    if (!listed_data) {
+        const err = new Error("Listing not found");
+        err.status = 404;
+        return next(err);
+    }
+
+    const { rating, comment } = req.body.listing;
+    const review = new Review({ rating, comment });
+
+    listed_data.reviews.push(review);
+    await review.save();
+    await listed_data.save();
+
+    res.send("Review saved successfully");
+}));
+
 //................Wrap Error Function.....................//
 function asyncWrap(fn) {
     return function (req, res, next) {
