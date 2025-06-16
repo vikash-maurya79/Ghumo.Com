@@ -8,3 +8,9 @@ module.exports.listingSchema = joi.object({
     state: joi.string().required(),
     pincode: joi.number().required()
 });
+module.exports.reviewSchema = joi.object({
+    listing:joi.object({
+        rating:joi.number().required(),
+        comment:joi.string().required()
+    })
+})

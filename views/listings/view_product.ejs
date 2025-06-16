@@ -24,12 +24,12 @@
       </div>
     </div>
     <hr>
-    <form action="">
+    <form action="/listing/<%=data_found_in_db._id%>/review" method="post">
       <div class="rating_container m-5">
         <label for="range" class="form-label">Rating :</label>
-        <input type="range" class="form-range" min="1" max="5" step="1" id="range">
+        <input type="range" class="form-range" min="1" max="5" step="1" id="range" name="listing[rating]" required>
         <label for="comment" class="form-label">Comment :</label>
-        <textarea class="form-control" aria-label="With textarea" id="comment"></textarea>
+        <textarea class="form-control" aria-label="With textarea" id="comment" name="listing[comment]"></textarea>
         <br>
         <button type="submit" class="btn btn-outline-primary">Submit</button>
       </div>
