@@ -122,3 +122,20 @@ button:hover {
 .error_container h3 {
     padding: 300px;
 }
+
+.review_container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+.review_message_container{
+ height: 150px;
+ width: 48%;
+text-align: center;
+margin: 11px;
+}
+.review_heading{
+    margin-left: 30px;
+}

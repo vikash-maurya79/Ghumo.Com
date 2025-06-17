@@ -34,4 +34,29 @@
         <button type="submit" class="btn btn-outline-primary">Submit</button>
       </div>
     </form>
+    <hr>  
+  <div class="container text-center">
+  <div class="row">
+    <div class="col-12">
+      <h3>Rating : <%=avg_rating%> </h3>
+    </div>
   </div>
+</div>
+<br>
+<br>
+
+    <h4 class="review_heading">What people say :</h4>
+    <div class="review_container">
+      
+    <%for(review of data_found_in_db.reviews){%>
+  
+             <div class="review_message_container">
+              <h5><%=review.rating%> Star</h5>
+              <p><%=review.comment%></p>
+              <form  method="POST" action="/product/<%=data_found_in_db._id%>/review/<%=review._id%>?_method=DELETE">
+                <button class="btn btn-outline-primary">Delete</button>
+              </form>
+             </div>
+      <%}%>
+  </div>
+  

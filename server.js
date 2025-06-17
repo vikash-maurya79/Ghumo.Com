@@ -94,11 +94,24 @@ app.post("/new_listings", asyncWrap(async (req, res, next) => {
 app.get("/product/:id/view", asyncWrap(async (req, res, next) => {
 
     let { id } = req.params;
-    const data_found_in_db = await product_data.findById(id);
+    const data_found_in_db = await product_data.findById(id).populate("reviews");
     console.log(data_found_in_db);
-    res.render("./listings/view_product.ejs", { data_found_in_db });
-
-
+    let rating_num = 0;
+    let i = 0;
+    for (rating_number of data_found_in_db.reviews) {
+        rating_num += rating_number.rating
+        i++;
+    }
+    let avg_rating;
+    console.log(rating_num);
+    if (rating_num == 0) {
+        avg_rating = "Rating not found";
+        console.log(avg_rating);
+    }
+    else {
+        avg_rating = rating_num / i;
+    }
+    res.render("./listings/view_product.ejs", { data_found_in_db, avg_rating });
 }))
 //...............Edit Route is Here............// 
 app.get("/edit/:id/product", asyncWrap(async (req, res, next) => {
@@ -123,7 +136,6 @@ app.put("/product/:id", validateListing, asyncWrap(async (req, res, next) => {
 //.................route for deletion of product.........................//
 app.delete("/product/:id", asyncWrap(async (req, res, next) => {
     let { id } = req.params;
-
     let deleted_data = await product_data.findByIdAndDelete(id);
     res.redirect("/");
 
@@ -149,6 +161,14 @@ app.post("/listing/:id/review", validateReview, asyncWrap(async (req, res, next)
 
     res.send("Review saved successfully");
 }));
+//..............Delete review route.............//
+app.delete("/product/:id/review/:review_id", asyncWrap(async (req, res, next) => {
+    let { id, review_id } = req.params;
+    await product_data.findByIdAndUpdate(id, { $pull: { reviews: review_id } });
+    await Review.findByIdAndDelete(review_id);
+    console.log("user is is ", id, "and review id is", review_id);
+    res.redirect(`/product/${id}/view`);
+}))
 
 //................Wrap Error Function.....................//
 function asyncWrap(fn) {
