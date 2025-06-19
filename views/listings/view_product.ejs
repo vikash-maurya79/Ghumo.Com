@@ -9,7 +9,7 @@
         <p class="card-text">
           <%=data_found_in_db.descreption%>
         </p>
-        <a href="/edit/<%=data_found_in_db._id%>/product">Edit</a>
+        <a href="/product/<%=data_found_in_db._id%>/edit">Edit</a>
       </div>
       <div class="delete_container">
         <p class="card-text">
@@ -24,7 +24,7 @@
       </div>
     </div>
     <hr>
-    <form action="/listing/<%=data_found_in_db._id%>/review" method="post">
+    <form action="/product/review/<%=data_found_in_db._id%>" method="post">
       <div class="rating_container m-5">
         <label for="range" class="form-label">Rating :</label>
         <input type="range" class="form-range" min="1" max="5" step="1" id="range" name="listing[rating]" required>
@@ -53,7 +53,7 @@
              <div class="review_message_container">
               <h5><%=review.rating%> Star</h5>
               <p><%=review.comment%></p>
-              <form  method="POST" action="/product/<%=data_found_in_db._id%>/review/<%=review._id%>?_method=DELETE">
+              <form  method="POST" action="/product/review/<%=data_found_in_db._id%>/<%=review._id%>?_method=DELETE">
                 <button class="btn btn-outline-primary">Delete</button>
               </form>
              </div>

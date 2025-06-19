@@ -24,7 +24,7 @@ a:hover {
 
 .main_bottom_container {
     background: black;
-    width: 100%;
+    width: 100% !important;
     height: 15rem;
     display: flex;
     flex-direction: column;
