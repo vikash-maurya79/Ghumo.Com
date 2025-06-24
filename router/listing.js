@@ -17,7 +17,7 @@ const validateListing = (req, res, next) => {
 router.get("/partner", (req, res) => {
     res.render("./listings/new_listing_form.ejs");
 })
-router.post("/new_listings",validateListing, asyncWrap(async (req, res, next) => {
+router.post("/new_listings", asyncWrap(async (req, res, next) => {
     let url_local = "https://images.pexels.com/photos/271816/pexels-photo-271816.jpeg?auto=compress&cs=tinysrgb&w=600";
     const data = {
         descreption: req.body.descreption,
@@ -31,7 +31,8 @@ router.post("/new_listings",validateListing, asyncWrap(async (req, res, next) =>
     let data_saved = new product_data(data);
     await data_saved.save().then((result) => {
         console.log(result);
-        res.send("data saved successfully");
+        req.flash("success","New item Listed!");
+        res.redirect("/");
     })
 }))
 router.get("/:id/view", asyncWrap(async (req, res, next) => {
@@ -75,6 +76,7 @@ router.put("/:id", asyncWrap(async (req, res, next) => {
 
     let edited_data_found = await product_data.findByIdAndUpdate(id, { ...req.body });
     console.log("edited data is", edited_data_found);
+    req.flash("success","Listing Updated successfully !")
     res.redirect(`/product/${id}/view`);
 })
 )
@@ -82,6 +84,7 @@ router.put("/:id", asyncWrap(async (req, res, next) => {
 router.delete("/:id", asyncWrap(async (req, res, next) => {
     let { id } = req.params;
     let deleted_data = await product_data.findByIdAndDelete(id);
+    req.flash("success","Listing deleted successfully");
     res.redirect("/");
 
 })
