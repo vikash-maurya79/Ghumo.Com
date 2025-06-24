@@ -1,19 +1,43 @@
 const express = require("express");
 const app = express();
 const path = require("path");
+const cookieparser = require("cookie-parser");
+app.use(cookieparser("secretcode"));
 const ejsmate = require("ejs-mate");
 const mongoose = require("mongoose");
 const product_data = require("./Database/product");
 const methodoverride = require("method-override");
-const { listingSchema, reviewSchema } = require("./schema_validation.js");
-const product = require("./router/listing.js");
-const review = require("./router/review.js");
+
 app.use(methodoverride("_method"));
 app.use(express.static("public"));
 app.engine("ejs", ejsmate);
 app.set("views", path.join(__dirname, "/views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const session = require("express-session");
+const flash = require("connect-flash");
+const User = require("./Database/user.js");
+const passport= require("passport");
+const localStrategy = require("passport-local").Strategy;
+const passportlocalmongoose = require("passport-local-mongoose");
+app.use(session({ secret: "mysecretecode", 
+    resave: false, 
+    saveUninitialized: true,
+    cookie:{
+        expires:Date.now()+7*24*60*60*1000,
+        maxAge:7*24*60*60*1000,
+        httpOnly:true
+    }
+ }  
+));
+
+
+const productRouter = require("./router/listing.js");
+const reviewRouter = require("./router/review.js");
+const userRouter = require("./router/user.js");
+
+
+app.use(flash());
 main().then(() => {
     console.log("Database is working well");
 
@@ -26,6 +50,22 @@ async function main() {
         console.log("Error occured ");
     }
 }
+app.use((req,res,next)=>{
+    res.locals.success=req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+});
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new localStrategy(User.authenticate()));
+ passport.serializeUser(User.serializeUser());
+ passport.deserializeUser(User.deserializeUser());
+
+app.use("/product", (productRouter));
+app.use("/product/review", (reviewRouter));
+app.use("/user",(userRouter));
+
 
 app.get("/", asyncWrap(async (req, res, next) => {
     const data = await product_data.find({});
@@ -38,9 +78,6 @@ app.get("/", asyncWrap(async (req, res, next) => {
 )
 )
 
-app.use("/product",(product));
-app.use("/product/review",(review));
- 
 
 function asyncWrap(fn) {
     return function (req, res, next) {

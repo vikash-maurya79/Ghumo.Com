@@ -3,6 +3,14 @@ body {
     display: flex;
     flex-direction: column;
 }
+.container{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.content{
+    flex: 1;
+}
 
 .main_top_container {
     background-color: white !important;
