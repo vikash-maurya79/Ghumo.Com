@@ -17,18 +17,19 @@ app.use(express.urlencoded({ extended: true }));
 const session = require("express-session");
 const flash = require("connect-flash");
 const User = require("./Database/user.js");
-const passport= require("passport");
+const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
 const passportlocalmongoose = require("passport-local-mongoose");
-app.use(session({ secret: "mysecretecode", 
-    resave: false, 
+app.use(session({
+    secret: "mysecretecode",
+    resave: false,
     saveUninitialized: true,
-    cookie:{
-        expires:Date.now()+7*24*60*60*1000,
-        maxAge:7*24*60*60*1000,
-        httpOnly:true
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true
     }
- }  
+}
 ));
 
 
@@ -50,23 +51,36 @@ async function main() {
         console.log("Error occured ");
     }
 }
-app.use((req,res,next)=>{
-    res.locals.success=req.flash("success");
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     next();
 });
 app.use(passport.initialize());
 app.use(passport.session());
 
+passport.use(User.createStrategy());
 passport.use(new localStrategy(User.authenticate()));
- passport.serializeUser(User.serializeUser());
- passport.deserializeUser(User.deserializeUser());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use("/product", (productRouter));
 app.use("/product/review", (reviewRouter));
-app.use("/user",(userRouter));
+app.use("/user", (userRouter));
+// app.post("user/login",passport.authenticate("local",{failureRedirect:"/user/login",failureFlash:true}),async(req,res)=>{
+//   req.flash("success","Login Successfull");
+//   res.redirect("/");
+// });
 
-
+app.get("/logout",(req,res,next)=>{
+        req.logOut((err)=>{
+            if(err){
+                next(err);
+            }
+            req.flash("success","Loged Out");
+            res.redirect("/");
+        })
+})
 app.get("/", asyncWrap(async (req, res, next) => {
     const data = await product_data.find({});
     console.log("it's working");

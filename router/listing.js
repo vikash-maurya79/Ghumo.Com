@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const product_data = require("../Database/product")
 const { listingSchema, reviewSchema } = require("../schema_validation.js");
+const {isLoggedIn} = require("../authentication/authentication.js")
 
 
 
@@ -14,10 +15,11 @@ const validateListing = (req, res, next) => {
     }
 }
 
-router.get("/partner", (req, res) => {
+router.get("/partner",isLoggedIn,(req,res,next) => {
+    console.log(req.user);
     res.render("./listings/new_listing_form.ejs");
 })
-router.post("/new_listings", asyncWrap(async (req, res, next) => {
+router.post("/new_listings",isLoggedIn, asyncWrap(async (req, res, next) => {
     let url_local = "https://images.pexels.com/photos/271816/pexels-photo-271816.jpeg?auto=compress&cs=tinysrgb&w=600";
     const data = {
         descreption: req.body.descreption,
@@ -81,7 +83,7 @@ router.put("/:id", asyncWrap(async (req, res, next) => {
 })
 )
 //.................route for deletion of product.........................//
-router.delete("/:id", asyncWrap(async (req, res, next) => {
+router.delete("/:id",isLoggedIn, asyncWrap(async (req, res, next) => {
     let { id } = req.params;
     let deleted_data = await product_data.findByIdAndDelete(id);
     req.flash("success","Listing deleted successfully");

@@ -7,7 +7,7 @@ router.get("/signup",async (req,res)=>{
     res.render("./user/user_signup_form.ejs");
 })
 
-router.post("/signup",async(req,res,next)=>{
+router.post("/signup",async(req,res)=>{
     try{
     let {username,email,password}=req.body;
      let newUser = new User({email,username});
@@ -24,10 +24,11 @@ router.post("/signup",async(req,res,next)=>{
 router.get("/login",(req,res)=>{
     res.render("./user/user_login.ejs");
 })
-router.post("/login",passport.authenticate("local",{failureRedirect:"/user/login",failureFlash:true}),async(req,res)=>{
-    req.flash("success","Welcome back you are logedd in");
+router.post("/login",passport.authenticate("local",{failureRedirect:"/login",failureFlash:true}),async(req,res)=>{
+    req.flash("success","LoginSuccess");
     res.redirect("/");
 })
+
 
 function asyncWrap(fn) {
     return function (req, res, next) {
