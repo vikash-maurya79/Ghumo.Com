@@ -26,7 +26,7 @@ function asyncWrap(fn) {
     }
 }
 
-router.post("/:id", validateReview, asyncWrap(async (req, res, next) => {
+router.post("/:id", isLoggedIn,validateReview, asyncWrap(async (req, res, next) => {
     const { id } = req.params;
     const listed_data = await product_data.findById(id);
 
@@ -37,8 +37,8 @@ router.post("/:id", validateReview, asyncWrap(async (req, res, next) => {
     }
 
     const { rating, comment } = req.body.listing;
-    const review = new Review({ rating, comment });
-
+    const review = new Review({ rating, comment});
+      review.author = req.user._id;
     listed_data.reviews.push(review);
     await review.save();
     await listed_data.save();
@@ -50,7 +50,7 @@ router.delete("/:id/:review_id", asyncWrap(async (req, res, next) => {
     let { id, review_id } = req.params;
     await product_data.findByIdAndUpdate(id, { $pull: { reviews: review_id } });
     await Review.findByIdAndDelete(review_id);
-    console.log("user is is ", id, "and review id is", review_id);
+    
     req.flash("success","Review deleted");
     res.redirect(`/product/${id}/view`);
 }))

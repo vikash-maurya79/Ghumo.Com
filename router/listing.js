@@ -1,22 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const product_data = require("../Database/product")
+const product_data = require("../Database/product");
 const { listingSchema, reviewSchema } = require("../schema_validation.js");
-const {isLoggedIn} = require("../authentication/authentication.js")
-
+const {isLoggedIn,isOwner} = require("../authentication/authentication.js");
 
 
 const validateListing = (req, res, next) => {
 
     let { error } = listingSchema.validate(req.body);
     if (error) {
-        console.log(error)
+        console.log(error);
         next(err.details).message;
     }
 }
 
 router.get("/partner",isLoggedIn,(req,res,next) => {
-    console.log(req.user);
+
     res.render("./listings/new_listing_form.ejs");
 })
 router.post("/new_listings",isLoggedIn, asyncWrap(async (req, res, next) => {
@@ -30,6 +29,7 @@ router.post("/new_listings",isLoggedIn, asyncWrap(async (req, res, next) => {
         state: req.body.state,
         pincode: req.body.pincode
     };
+    data.owner=req.user._id;
     let data_saved = new product_data(data);
     await data_saved.save().then((result) => {
         console.log(result);
@@ -37,11 +37,10 @@ router.post("/new_listings",isLoggedIn, asyncWrap(async (req, res, next) => {
         res.redirect("/");
     })
 }))
-router.get("/:id/view", asyncWrap(async (req, res, next) => {
+router.get("/:id/view",asyncWrap(async (req, res, next) => {
 
     let { id } = req.params;
-    const data_found_in_db = await product_data.findById(id).populate("reviews");
-    console.log(data_found_in_db);
+    const data_found_in_db = await product_data.findById(id).populate({path:"reviews",populate:{path:"author"}}).populate("owner");
     let rating_num = 0;
     let i = 0;
     for (rating_number of data_found_in_db.reviews) {
@@ -49,10 +48,9 @@ router.get("/:id/view", asyncWrap(async (req, res, next) => {
         i++;
     }
     let avg_rating;
-    console.log(rating_num);
+    
     if (rating_num == 0) {
         avg_rating = "Rating not found";
-        console.log(avg_rating);
     }
     else {
         avg_rating = rating_num / i;
@@ -62,22 +60,20 @@ router.get("/:id/view", asyncWrap(async (req, res, next) => {
 
 
 
-router.get("/:id/edit", asyncWrap(async (req, res, next) => {
+router.get("/:id/edit",isLoggedIn, isOwner,asyncWrap(async (req, res, next) => {
     console.log("edit route hitten");
     let { id } = req.params;
-    console.log(id);
+    
     const data_found_to_edit = await product_data.findById(id);
-    console.log("data found for editing", data_found_to_edit);
+    
     res.render("./listings/edit_form.ejs", { data_found_to_edit });
 
 
 }))
-router.put("/:id", asyncWrap(async (req, res, next) => {
+router.put("/:id",isOwner,asyncWrap(async (req, res, next) => {
     let { id } = req.params;
-    console.log(req.body);
-
     let edited_data_found = await product_data.findByIdAndUpdate(id, { ...req.body });
-    console.log("edited data is", edited_data_found);
+
     req.flash("success","Listing Updated successfully !")
     res.redirect(`/product/${id}/view`);
 })
@@ -85,6 +81,11 @@ router.put("/:id", asyncWrap(async (req, res, next) => {
 //.................route for deletion of product.........................//
 router.delete("/:id",isLoggedIn, asyncWrap(async (req, res, next) => {
     let { id } = req.params;
+    let listing =await product_data.findById(id);
+    if(!listing.owner._id.equals(res.locals.currentUser._id)){
+        req.flash("error","You are not authorised to delete");
+        return res.redirect(`/product/${id}/view`);
+    }
     let deleted_data = await product_data.findByIdAndDelete(id);
     req.flash("success","Listing deleted successfully");
     res.redirect("/");
