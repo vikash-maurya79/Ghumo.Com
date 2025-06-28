@@ -19,7 +19,10 @@ const flash = require("connect-flash");
 const User = require("./Database/user.js");
 const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
-const passportlocalmongoose = require("passport-local-mongoose");
+
+
+
+
 app.use(session({
     secret: "mysecretecode",
     resave: false,
@@ -36,6 +39,7 @@ app.use(session({
 const productRouter = require("./router/listing.js");
 const reviewRouter = require("./router/review.js");
 const userRouter = require("./router/user.js");
+const homeRouter = require("./router/home.js");
 
 
 app.use(flash());
@@ -51,9 +55,19 @@ async function main() {
         console.log("Error occured ");
     }
 }
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(User.createStrategy());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
+    res.locals.currentUser = req.user;
     next();
 });
 app.use(passport.initialize());
@@ -67,10 +81,8 @@ passport.deserializeUser(User.deserializeUser());
 app.use("/product", (productRouter));
 app.use("/product/review", (reviewRouter));
 app.use("/user", (userRouter));
-// app.post("user/login",passport.authenticate("local",{failureRedirect:"/user/login",failureFlash:true}),async(req,res)=>{
-//   req.flash("success","Login Successfull");
-//   res.redirect("/");
-// });
+app.use("/",(homeRouter));
+
 
 app.get("/logout",(req,res,next)=>{
         req.logOut((err)=>{
@@ -80,26 +92,13 @@ app.get("/logout",(req,res,next)=>{
             req.flash("success","Loged Out");
             res.redirect("/");
         })
-})
-app.get("/", asyncWrap(async (req, res, next) => {
-    const data = await product_data.find({});
-    console.log("it's working");
-    res.render("./listings/home.ejs", { data });
-    console.log("render is not working");
-    console.log("Home route is running well");
-    console.log("Data is ", data);
-}
-)
-)
+}) 
 
 
-function asyncWrap(fn) {
-    return function (req, res, next) {
-        fn(req, res, next).catch((err) => {
-            next(err);
-        })
-    }
-}
+
+
+
+
 app.use((err, req, res, next) => {
     let status = err.status || 500;
     let message = err.message || "Somthing went wrong";

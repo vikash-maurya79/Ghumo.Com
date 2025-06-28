@@ -147,3 +147,9 @@ margin: 11px;
 .review_heading{
     margin-left: 30px;
 }
+.logout{
+    color: red !important;
+}
+.logout:hover{
+    color: red !important;
+}

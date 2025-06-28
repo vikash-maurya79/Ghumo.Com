@@ -9,7 +9,9 @@
         <p class="card-text">
           <%=data_found_in_db.descreption%>
         </p>
+        <%if(currentUser && currentUser._id.equals(data_found_in_db.owner._id)){%>
         <a href="/product/<%=data_found_in_db._id%>/edit">Edit</a>
+        <%}%>
       </div>
       <div class="delete_container">
         <p class="card-text">
@@ -18,12 +20,18 @@
         <p class="card-text">
           <%=data_found_in_db.state%>
         </p>
+         <p class="card-text">
+           Owner : <%=data_found_in_db.owner.username%>
+        </p>
+        <%if(currentUser && currentUser._id.equals(data_found_in_db.owner._id)){%>
         <form action="/product/<%=data_found_in_db._id%>?_method=DELETE" method="POST">
           <p class="card-text"><button class="btn btn-outline-primary">Delete</button></p>
         </form>
+        <%}%>
       </div>
     </div>
     <hr>
+    <%if(currentUser){%>
     <form action="/product/review/<%=data_found_in_db._id%>" method="post">
       <div class="rating_container m-5">
         <label for="range" class="form-label">Rating :</label>
@@ -34,6 +42,7 @@
         <button type="submit" class="btn btn-outline-primary">Submit</button>
       </div>
     </form>
+    <%}%>
     <hr>  
   <div class="container text-center">
   <div class="row">
@@ -51,12 +60,13 @@
     <%for(review of data_found_in_db.reviews){%>
   
              <div class="review_message_container">
-              <h5><%=review.rating%> Star</h5>
+              <h5><%=review.author.username%>   &nbsp;&nbsp;<%=review.rating%> Star</h5>
               <p><%=review.comment%></p>
+              <%if(currentUser && review.author._id.equals(currentUser._id)){%>
               <form  method="POST" action="/product/review/<%=data_found_in_db._id%>/<%=review._id%>?_method=DELETE">
-                <button class="btn btn-outline-primary">Delete</button>
+              <button class="btn btn-outline-primary">Delete</button>
               </form>
+              <%}%>
              </div>
       <%}%>
   </div>
-  

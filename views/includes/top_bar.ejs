@@ -12,13 +12,24 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    
-        
+
+
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                     <a class="nav-link active" href="#">LivingRoom</a>
                     <a class="nav-link active" href="#">Hotel</a>
-                    <a class="nav-link active" href="#">Login</a>
-                    
+                    <a class="nav-link active" href="#">Apartment</a>
+
+                </div>
+                <div class="navbar-nav ms-auto">
+                    <%if(currentUser){%>
+                        <a class="nav-link active logout" href="/logout">Logout</a>
+                        <%}%>
+
+                            <%if(!currentUser){%>
+                                <a class="nav-link active" aria-current="page" href="/user/login">Login</a>
+                                <a class="nav-link active" href="/user/signup">Signup</a>
+                                <%}%>
+
                 </div>
             </div>
         </div>
