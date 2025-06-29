@@ -1,4 +1,5 @@
 const product_data = require("../Database/product");
+const {reviewSchema} = require("../schema_validation");
 
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
@@ -32,4 +33,16 @@ module.exports.asyncWrap = function (fn) {
             next(err);
         })
     }
+}
+
+module.exports.validateReview = (req, res, next) => {
+    let { error } = reviewSchema.validate(req.body);
+    if (error) {
+        console.log(error);
+        let msg = error.details.map(el => el.message).join(",");
+        let err = new Error(msg);
+        err.status = 400;
+        return next(err);
+    }
+    next();
 }
