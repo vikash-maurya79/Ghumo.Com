@@ -1,6 +1,6 @@
 <%layout("/layout/boilerplate")%>
   <div class="card mb-3 m-5">
-    <img src="<%=data_found_in_db.url%>" class="card-img-top" alt="...">
+    <img src="<%=data_found_in_db.image.url%>" class="card-img-top" alt="...">
     <div class="card-body">
       <div class="edit_container">
         <h5 class="card-title">
@@ -10,8 +10,8 @@
           <%=data_found_in_db.descreption%>
         </p>
         <%if(currentUser && currentUser._id.equals(data_found_in_db.owner._id)){%>
-        <a href="/product/<%=data_found_in_db._id%>/edit">Edit</a>
-        <%}%>
+          <a href="/product/<%=data_found_in_db._id%>/edit">Edit</a>
+          <%}%>
       </div>
       <div class="delete_container">
         <p class="card-text">
@@ -20,22 +20,42 @@
         <p class="card-text">
           <%=data_found_in_db.state%>
         </p>
-         <p class="card-text">
-           Owner : <%=data_found_in_db.owner.username%>
+        <p class="card-text">
+          Owner : <%=data_found_in_db.owner.username%>
         </p>
         <%if(currentUser && currentUser._id.equals(data_found_in_db.owner._id)){%>
-        <form action="/product/<%=data_found_in_db._id%>?_method=DELETE" method="POST">
-          <p class="card-text"><button class="btn btn-outline-primary">Delete</button></p>
-        </form>
-        <%}%>
+          <form action="/product/<%=data_found_in_db._id%>?_method=DELETE" method="POST">
+            <p class="card-text"><button class="btn btn-outline-primary">Delete</button></p>
+          </form>
+          <%}%>
       </div>
     </div>
-    <hr>
-    <%if(currentUser){%>
+  </div>
+
+  <%if(currentUser){%>
     <form action="/product/review/<%=data_found_in_db._id%>" method="post">
       <div class="rating_container m-5">
-        <label for="range" class="form-label">Rating :</label>
-        <input type="range" class="form-range" min="1" max="5" step="1" id="range" name="listing[rating]" required>
+        <label for="no-rate">Rating</label>
+        <fieldset class="starability-slot">
+          <input type="radio" id="no-rate" class="input-no-rate" name="listing[rating]" value="0" checked
+            aria-label="No rating." />
+
+          <input type="radio" id="rate1" name="listing[rating]" value="1" />
+          <label for="rate1">1 star.</label>
+
+          <input type="radio" id="rate2" name="listing[rating]" value="2" />
+          <label for="rate2">2 stars.</label>
+
+          <input type="radio" id="rate3" name="listing[rating]" value="3" />
+          <label for="rate3">3 stars.</label>
+
+          <input type="radio" id="rate4" name="listing[rating]" value="4" />
+          <label for="rate4">4 stars.</label>
+
+          <input type="radio" id="rate5" name="listing[rating]" value="5" />
+          <label for="rate5">5 stars.</label>
+
+        </fieldset>
         <label for="comment" class="form-label">Comment :</label>
         <textarea class="form-control" aria-label="With textarea" id="comment" name="listing[comment]"></textarea>
         <br>
@@ -44,30 +64,35 @@
     </form>
     <hr>
     <%}%>
-      
-  <div class="container text-center">
-  <div class="row">
-    <div class="col-12">
-      <h3>Rating : <%=avg_rating%> </h3>
-    </div>
-  </div>
-</div>
-<br>
-<br>
 
-    <h4 class="review_heading">What people say :</h4>
-    <div class="review_container">
-      
-    <%for(review of data_found_in_db.reviews){%>
-  
-             <div class="review_message_container">
-              <h5><%=review.author.username%>   &nbsp;&nbsp;<%=review.rating%> Star</h5>
-              <p><%=review.comment%></p>
+      <div class="avg_rating_container">
+        Average <p class="starability-result" data-rating="<%=avg_rating%>"></p>
+
+      </div>
+      <div class="review_container">
+        <%for(review of data_found_in_db.reviews){%>
+          <div class="card border mb-3" style="min-width: 18rem; min-height: 200px;">
+            <div class="card-header">
+               <%=review.author.username%>
+            </div>
+
+            <div class="card-body text-secondary">
+              <h6 class="card-title">
+                <p class="starability-result" data-rating="<%=review.rating%>"></p>
+               
+              </h6>
+
+              <p class="card-text">
+                <%=review.comment%>
+              </p>
               <%if(currentUser && review.author._id.equals(currentUser._id)){%>
-              <form  method="POST" action="/product/review/<%=data_found_in_db._id%>/<%=review._id%>?_method=DELETE">
-              <button class="btn btn-outline-primary">Delete</button>
-              </form>
-              <%}%>
-             </div>
-      <%}%>
-  </div>
+                <form method="POST" action="/product/review/<%=data_found_in_db._id%>/<%=review._id%>?_method=DELETE">
+                  <br>
+                  <button class="btn btn-outline-primary">Delete</button>
+                </form>
+                <%}%>
+
+            </div>
+          </div>
+          <%}%>
+      </div>

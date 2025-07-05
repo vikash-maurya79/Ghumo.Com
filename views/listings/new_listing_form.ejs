@@ -1,18 +1,23 @@
 
-<form class="row g-4 m-3 needs-validation" novalidate class="listing_form" method="POST" action="/product/new_listings">
+<form class="row g-4 m-3" method="POST" action="/product/new_listings" enctype="multipart/form-data">
+  <div class="col-md-6 ">
+    <label for="inputEmail4" class="form-label">Title</label>
+    <input type="text" class="form-control" id="inputEmail4" name="title" placeholder="Enter attractive title here" required>
+  
+  </div>
   <div class="col-md-6 ">
     <label for="inputEmail4" class="form-label">Descreption</label>
     <input type="text" class="form-control" id="inputEmail4" name="descreption" required>
-    <div class="valid-feedback">Correct</div>
+    
   </div>
   <div class="col-md-6">
-    <label for="inputEmail4" class="form-label">Image Url</label>
-    <input type="text" class="form-control" id="inputEmail4" name="image_url">
+    <label for="inputEmail4" class="form-label">Upload Image</label>
+    <input type="file" class="form-control" id="inputEmail4" name="image" required>
 </div>
   <div class="col-12">
     <label for="inputAddress" class="form-label">Address</label>
     <input type="text" class="form-control" id="inputAddress" name="address" placeholder="Village/Town , Area , Subdistrict , District" required>
-    <div class="invalid-feedback">Now Good</div>
+    
   </div>
   <div class="col-12">
     <label for="inputAddress2" class="form-label">Address 2</label>
@@ -34,6 +39,10 @@
   <div class="col-md-2">
     <label for="inputZip" class="form-label">Pincode</label>
     <input type="number" class="form-control" name="pincode" id="inputZip" required>
+  </div>
+  <div class="col-md-2">
+    <label for="inputZip" class="form-label">Price</label>
+    <input type="number" class="form-control" name="price" id="inputZip" placeholder="999/Night" required>
   </div>
   <div class="col-12">
     <button type="submit" class="btn btn-primary">List</button>

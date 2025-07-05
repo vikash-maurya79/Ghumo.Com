@@ -7,28 +7,34 @@ module.exports.newForm = (req,res,next) => {
 }
 
 module.exports.listingPartner =  asyncWrap(async (req, res, next) => {
-    let url_local = "https://images.pexels.com/photos/271816/pexels-photo-271816.jpeg?auto=compress&cs=tinysrgb&w=600";
+    console.log(req.file);
+    let url = req.file.path;
+    let filename =req.file.filename;
     const data = {
+        title:req.body.title,
         descreption: req.body.descreption,
-        url: url_local,
         address: req.body.address,
         address2: req.body.address2,
         city: req.body.city,
         state: req.body.state,
-        pincode: req.body.pincode
+        pincode: req.body.pincode,
+        price:req.body.price
     };
     data.owner=req.user._id;
+    
     let data_saved = new product_data(data);
-    await data_saved.save().then((result) => {
+    data_saved.image={url,filename};
+    await data_saved.save();
         req.flash("success","New item Listed!");
         res.redirect("/");
-    })
+    
 })
 
 module.exports.viewListing = async (req, res, next) => {
 
     let { id } = req.params;
     const data_found_in_db = await product_data.findById(id).populate({path:"reviews",populate:{path:"author"}}).populate("owner");
+    console.log(data_found_in_db);
     let rating_num = 0;
     let i = 0;
     for (rating_number of data_found_in_db.reviews) {
@@ -47,7 +53,6 @@ module.exports.viewListing = async (req, res, next) => {
 }
 
 module.exports.editListing_get=async (req, res, next) => {
-    console.log("edit route hitten");
     let { id } = req.params;
     
     const data_found_to_edit = await product_data.findById(id);
@@ -59,6 +64,12 @@ module.exports.editListing_get=async (req, res, next) => {
 module.exports.editListing_put= async (req, res, next) => {
     let { id } = req.params;
     let edited_data_found = await product_data.findByIdAndUpdate(id, { ...req.body });
+    if(typeof req.file != "undefined"){
+    let url = req.file.path;
+    let filename = req.file.filename;
+    edited_data_found.image={url,filename};
+    edited_data_found.save();
+    }
 
     req.flash("success","Listing Updated successfully !")
     res.redirect(`/product/${id}/view`);

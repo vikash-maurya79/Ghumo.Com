@@ -1,13 +1,13 @@
 
-<form class="row g-4 m-3 needs-validation" novalidate class="listing_form" method="POST" action="/product/<%=data_found_to_edit._id%>?_method=PUT">
+<form class="row g-4 m-3" enctype="multipart/form-data" method="POST" action="/product/<%=data_found_to_edit._id%>?_method=PUT">
   <div class="col-md-6 ">
     <label for="inputEmail4" class="form-label">Descreption</label>
     <input type="text" class="form-control" value="<%=data_found_to_edit.descreption%>" id="inputEmail4" name="descreption" required>
-    <div class="valid-feedback">Correct</div>
+    
   </div>
   <div class="col-md-6">
-    <label for="inputEmail4" class="form-label">Url</label>
-    <input type="text" class="form-control" value="<%=data_found_to_edit.url%>" id="inputEmail4" name="image_url">
+    <label for="inputEmail4" class="form-label">Update Image</label>
+    <input type="file" class="form-control" id="inputEmail4" name="image">
 </div>
   <div class="col-12">
     <label for="inputAddress" class="form-label">Address</label>
@@ -34,6 +34,10 @@
   <div class="col-md-2">
     <label for="inputZip" class="form-label">Pincode</label>
     <input type="text" class="form-control" value="<%=data_found_to_edit.pincode%>" name="pincode" id="inputZip" required>
+  </div>
+  <div class="col-md-2">
+    <label for="inputZip" class="form-label">Price</label>
+    <input type="text" class="form-control" value="<%=data_found_to_edit.price%>" name="price" id="inputZip" required>
   </div>
   <div class="col-12">
     <button type="submit" class="btn btn-primary">Edit</button>

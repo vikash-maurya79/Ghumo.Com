@@ -1,22 +1,28 @@
 const mongoose = require("mongoose");
 let Review = require("./review.js");
+const { required } = require("joi");
 const productSchema = new mongoose.Schema({
+    title:String,
     descreption: String,
-    url: String,
     address: String,
     address2: String,
     city: String,
     state: String,
     pincode: Number,
+    price:Number,
+    image:{
+        url:String,
+        filename:String
+    },
     reviews: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Review"
         }
     ],
-    owner:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     }
 
 })

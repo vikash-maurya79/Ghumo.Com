@@ -136,21 +136,23 @@ button:hover {
 .review_container {
     height: 100%;
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
+    gap: 1rem;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: row !important;
+    justify-content: space-evenly !important;
 }
 
-.review_message_container {
-    height: 150px;
-    width: 48%;
-    text-align: center;
-    margin: 11px;
+.card-body{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: column !important;
+    justify-content: space-evenly !important;
 }
-
 .review_heading {
     margin-left: 30px;
 }
+
 
 .logout {
     color: red !important;
@@ -159,3 +161,15 @@ button:hover {
 .logout:hover {
     color: red !important;
 }
+
+.avg_rating_container{
+    height: 6rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.price_place{
+    color: green;
+}
+

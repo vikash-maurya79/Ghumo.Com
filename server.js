@@ -63,11 +63,13 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+ const {formatINR} = require("./authentication/authentication.js");
 
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.currentUser = req.user;
+    res.locals.formatINR=formatINR;
     next();
 });
 app.use(passport.initialize());

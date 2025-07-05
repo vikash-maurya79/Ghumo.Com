@@ -20,7 +20,7 @@ module.exports.saveredirectUrl = (req, res, next) => {
 module.exports.isOwner =async (req,res,next)=>{
     let {id}= req.params;
     let listing =await product_data.findById(id);
-    if(!res.locals.currentUser._id.equals(listing._id)){
+    if(!res.locals.currentUser._id.equals(listing.owner)){
          req.flash("error","Not authorised");
          return res.redirect(`/product/${id}/view`);
     }
@@ -29,11 +29,10 @@ module.exports.isOwner =async (req,res,next)=>{
 
 module.exports.asyncWrap = function (fn) {
     return function (req, res, next) {
-        fn(req, res, next).catch((err) => {
-            next(err);
-        })
+        fn(req, res, next).catch(next);
     }
 }
+
 
 module.exports.validateReview = (req, res, next) => {
     let { error } = reviewSchema.validate(req.body);
@@ -46,3 +45,13 @@ module.exports.validateReview = (req, res, next) => {
     }
     next();
 }
+
+
+// convert amount in indian rupees system with rupees symbol
+exports.formatINR = (amount) => {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 2
+  }).format(amount);
+};
