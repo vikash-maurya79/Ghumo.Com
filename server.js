@@ -57,7 +57,6 @@ app.use(session({
 const productRouter = require("./router/listing.js");
 const reviewRouter = require("./router/review.js");
 const userRouter = require("./router/user.js");
-const homeRouter = require("./router/home.js");
 
 
 app.use(flash());
@@ -106,10 +105,15 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.get("/",async (req, res, next) => {
+   
+    const data = await product_data.find({});
+    res.render("./listings/home.ejs", { data });
+})
+
 app.use("/product", (productRouter));
 app.use("/product/review", (reviewRouter));
 app.use("/user", (userRouter));
-app.use("/",(homeRouter));
 
 
 app.get("/logout",(req,res,next)=>{

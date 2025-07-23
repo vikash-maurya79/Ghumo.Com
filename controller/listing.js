@@ -102,7 +102,8 @@ module.exports.search = async (req,res,next)=>{
         let data_founded =await product_data.find({city:location});
         if(data_founded && data_founded.length>0){
          console.log(data_founded);
-         res.render("./listings/home.ejs",{data_founded});
+        res.render("./listings/home.ejs", { data: data_founded });
+
         }
         else{
       let data = "Nothing found !";
