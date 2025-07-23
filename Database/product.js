@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema({
     state: String,
     pincode: Number,
     price:Number,
+    area:String,
     image:{
         url:String,
         filename:String

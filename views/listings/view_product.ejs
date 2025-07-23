@@ -57,7 +57,7 @@
 
         </fieldset>
         <label for="comment" class="form-label">Comment :</label>
-        <textarea class="form-control" aria-label="With textarea" id="comment" name="listing[comment]"></textarea>
+        <textarea class="form-control" aria-label="With textarea" id="comment" name="listing[comment]" required></textarea>
         <br>
         <button type="submit" class="btn btn-outline-primary">Submit</button>
       </div>
@@ -71,7 +71,7 @@
       </div>
       <div class="review_container">
         <%for(review of data_found_in_db.reviews){%>
-          <div class="card border mb-3" style="min-width: 18rem; min-height: 200px;">
+          <div class="card border mb-3" style="max-width: 18rem; min-height: 200px;">
             <div class="card-header">
                <%=review.author.username%>
             </div>
@@ -95,4 +95,5 @@
             </div>
           </div>
           <%}%>
+             
       </div>

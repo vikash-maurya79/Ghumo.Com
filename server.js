@@ -5,8 +5,9 @@ const cookieparser = require("cookie-parser");
 app.use(cookieparser("secretcode"));
 const ejsmate = require("ejs-mate");
 const mongoose = require("mongoose");
-const product_data = require("./Database/product");
 const methodoverride = require("method-override");
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended:true}));
 
 app.use(methodoverride("_method"));
 app.use(express.static("public"));
@@ -15,16 +16,31 @@ app.set("views", path.join(__dirname, "/views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const User = require("./Database/user.js");
 const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
+const ExpressError= require("./ExpressError.js");
+require('dotenv').config();
+
+const mongo_url =process.env.MONGODB_URL;
 
 
-
+const store = MongoStore.create({
+    mongoUrl:mongo_url,
+    crypto:{
+        secret:process.env.SECRET,
+    },
+    touchAfter:24*3600,
+})
+store.on("error",()=>{
+    console.log("Error in mongo session", err);
+})
 
 app.use(session({
-    secret: "mysecretecode",
+    store,
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -36,6 +52,8 @@ app.use(session({
 ));
 
 
+
+
 const productRouter = require("./router/listing.js");
 const reviewRouter = require("./router/review.js");
 const userRouter = require("./router/user.js");
@@ -43,18 +61,24 @@ const homeRouter = require("./router/home.js");
 
 
 app.use(flash());
+
+
 main().then(() => {
     console.log("Database is working well");
 
-})
+}). catch ((err)=>{
+    console.log("Error occured ",err);
+    })
 async function main() {
-    try {
-        await mongoose.connect("mongodb://127.0.0.1:27017/Ghumo_Product")
-    }
-    catch (err) {
-        console.log("Error occured ");
-    }
+    
+     await mongoose.connect(mongo_url,{
+        ssl:true,
+        tlsAllowInvalidCertificates:true,
+     });  
+    
 }
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -63,7 +87,9 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
- const {formatINR} = require("./authentication/authentication.js");
+ const {formatINR, asyncWrap} = require("./authentication/authentication.js");
+const product_data = require("./Database/product.js");
+const { error } = require("console");
 
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
@@ -100,15 +126,14 @@ app.get("/logout",(req,res,next)=>{
 
 
 
-
 app.use((err, req, res, next) => {
-    let status = err.status || 500;
-    let message = err.message || "Somthing went wrong";
+    let {status =500,message="Some Error Occured"}= err;
     res.status(status).send(message);
+    
 })
 //................Middleware to handle unknown route access.........//
 app.all("*", (req, res, next) => {
-    let data = "This page is lost in space , stop searching and back to earth !!";
+    let data = "This page is lost in space , stop searching.";
     res.render("./listings/error.ejs", { data });
 })
 app.listen("8888", () => {

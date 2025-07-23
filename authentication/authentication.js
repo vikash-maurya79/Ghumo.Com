@@ -1,5 +1,7 @@
 const product_data = require("../Database/product");
+const ExpressError = require("../ExpressError");
 const {reviewSchema} = require("../schema_validation");
+const mongoose=require("mongoose");
 
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
@@ -27,12 +29,12 @@ module.exports.isOwner =async (req,res,next)=>{
     next();
 }
 
-module.exports.asyncWrap = function (fn) {
-    return function (req, res, next) {
-        fn(req, res, next).catch(next);
-    }
-}
 
+  module.exports.asyncWrap= function (fn){
+    return function(req,res,next){
+    fn(req,res,next).catch(next);
+ }
+  }
 
 module.exports.validateReview = (req, res, next) => {
     let { error } = reviewSchema.validate(req.body);
@@ -55,3 +57,13 @@ exports.formatINR = (amount) => {
     maximumFractionDigits: 2
   }).format(amount);
 };
+
+
+module.exports.validateId = function(req,res,next){
+    let {id} = req.params;
+    if( !mongoose.Types.ObjectId.isValid(id)){
+        
+       return next(new ExpressError(401,"Data not found"));
+    }
+    next();
+}
