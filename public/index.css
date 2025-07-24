@@ -216,3 +216,9 @@ button:hover {
     display: inline;
     margin-left: 0.5rem;
 }
+.love{
+    margin-top: 1rem;
+}
+.heart{
+    color: #FF5A60;
+}
