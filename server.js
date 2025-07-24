@@ -136,7 +136,7 @@ app.use((err, req, res, next) => {
     
 })
 //................Middleware to handle unknown route access.........//
-app.all("*", (req, res, next) => {
+app.all("/{*any}", (req, res, next) => {
     let data = "This page is lost in space , stop searching.";
     res.render("./listings/error.ejs", { data });
 })

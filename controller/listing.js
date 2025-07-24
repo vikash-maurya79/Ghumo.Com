@@ -19,12 +19,12 @@ module.exports.listingPartner = asyncWrap(async (req, res) => {
         state: req.body.state,
         pincode: req.body.pincode,
         price: req.body.price,
-        area:req.body.area
+        area: req.body.area
     };
     data.owner = req.user._id;
 
     let data_saved = new product_data(data);
-    data_saved.image = await{ url, filename };
+    data_saved.image = await { url, filename };
     await data_saved.save();
     req.flash("success", "New item Listed!");
     res.redirect("/");
@@ -53,7 +53,7 @@ module.exports.viewListing = async (req, res, next) => {
     else {
         avg_rating = rating_num / i;
     }
-    
+
 
     res.render("./listings/view_product.ejs", { data_found_in_db, avg_rating });
 }
@@ -92,27 +92,27 @@ module.exports.deleteListing = async (req, res, next) => {
     req.flash("success", "Listing deleted successfully");
     res.redirect("/");
 }
-module.exports.search = async (req,res,next)=>{
-    const locat= req.body.search;
-    let location = locat.charAt(0).toUpperCase()+locat.slice(1);
+module.exports.search = async (req, res, next) => {
+    const locat = req.body.search;
+    let location = locat.charAt(0).toUpperCase() + locat.slice(1);
 
-    console.log("location is",location);
+    console.log("location is", location);
 
-    try{
-        let data_founded =await product_data.find({city:location});
-        if(data_founded && data_founded.length>0){
-         console.log(data_founded);
-        res.render("./listings/home.ejs", { data: data_founded });
+    try {
+        let data_founded = await product_data.find({ city: location });
+        if (data_founded && data_founded.length > 0) {
+            console.log(data_founded);
+            res.render("./listings/home.ejs", { data: data_founded });
 
         }
-        else{
-      let data = "Nothing found !";
-        res.render("./listings/error.ejs",{data});
+        else {
+            let data = "Nothing found !";
+            res.render("./listings/error.ejs", { data });
         }
-      
+
     }
-    catch(err){
+    catch (err) {
         console.log(err.message);
     }
-    
+
 }
